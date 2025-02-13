@@ -2,11 +2,9 @@ package io.github.giulms.produtosapi.controller;
 
 import io.github.giulms.produtosapi.model.Produto;
 import io.github.giulms.produtosapi.repository.ProdutoRepository;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 //Diz para o spring que a classe vai receber requisições REST
@@ -34,5 +32,12 @@ public class ProdutoController {
         //Escolho o metodo que vou usar no repositorio
         produtoRepository.save(produto);
         return produto;
+    }
+
+    //Posso colocar mais parametros da URL como /{id}/{nome}/{preco}
+    @GetMapping("/{id}")
+    //Esse PathVariable indica que o id de cima se refere ao id de baixo tipo o body da requisição só que no caso é na URL
+    public Produto obterPorId(@PathVariable("id") String id) {
+        return produtoRepository.findById(id).orElse(null);
     }
 }
