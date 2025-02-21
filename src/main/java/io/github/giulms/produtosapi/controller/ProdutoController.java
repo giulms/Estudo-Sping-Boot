@@ -4,7 +4,7 @@ import io.github.giulms.produtosapi.model.Produto;
 import io.github.giulms.produtosapi.repository.ProdutoRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 //Diz para o spring que a classe vai receber requisições REST
@@ -36,6 +36,7 @@ public class ProdutoController {
 
     //Posso colocar mais parametros da URL como /{id}/{nome}/{preco}
     @GetMapping("/{id}")
+    //O PathVariable é um body na url
     //Esse PathVariable indica que o id de cima se refere ao id de baixo tipo o body da requisição só que no caso é na URL
     public Produto obterPorId(@PathVariable("id") String id) {
         return produtoRepository.findById(id).orElse(null);
@@ -44,5 +45,19 @@ public class ProdutoController {
     @DeleteMapping("/{id}")
     public void deletar(@PathVariable("id") String id) {
         produtoRepository.deleteById(id);
+    }
+
+    @PutMapping("{id}")
+    public void atualizar(@PathVariable("id") String id,
+                          @RequestBody Produto produto) {
+        produto.setId(id);
+        produtoRepository.save(produto);
+    }
+
+    //Não preciso passar nenhum parametro porque vai ser direto pra raiz produtos
+    @GetMapping
+    //O RequestParam serve para meio que fazer a pergunta na URL pra checkar se existe com base no que foi perguntado na URL Ex: ?nome=HD
+    public List<Produto> buscar(@RequestParam("nome") String nome) {
+        return produtoRepository.findByNome(nome);
     }
 }
